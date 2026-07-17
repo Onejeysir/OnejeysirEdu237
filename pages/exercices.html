@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercices — OnejeysirEdu237</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/tokens.css">
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/pages.css">
+<script defer src="../src/js/theme.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content" style="max-width: 680px;">
+    <div class="breadcrumb">
+      <a href="cours.html">Mes cours</a> / <a id="crumb-matiere" href="#"></a> / <a id="crumb-chapitre" href="#"></a> / Exercices
+    </div>
+
+    <div id="quiz-root"></div>
+  </main>
+</div>
+
+<script type="module">
+import { AuthService } from '../src/js/services/auth-service.js';
+import { ProgressService } from '../src/js/services/progress-service.js';
+import { getMatiere, getChapitre } from '../src/js/data/content.js';
+
+const user = AuthService.requireAuth('login.html');
+
+document.getElementById('sidebar').innerHTML = `
+  <a href="../index.html" class="nav__brand" style="margin-bottom: var(--space-8);">Onejeysir<span class="dot">Edu</span>237</a>
+  <a href="dashboard.html" class="sidebar__link">📊 Tableau de bord</a>
+  <a href="cours.html" class="sidebar__link is-active">📚 Mes cours</a>
+  <a href="cours.html" class="sidebar__link">✏️ Exercices</a>
+  <a href="#" class="sidebar__link">⏱️ Examens blancs</a>
+  <a href="#" class="sidebar__link">📁 Banque de sujets</a>
+  <a href="#" class="sidebar__link">🗓️ Révisions</a>
+  <a href="#" class="sidebar__link">📈 Statistiques</a>
+  <div style="margin-top:auto; padding-top: var(--space-6); border-top: 1px solid var(--border-glass);">
+    <a href="#" class="sidebar__link">⚙️ Profil</a>
+    <a href="#" id="logout-link" class="sidebar__link">🚪 Déconnexion</a>
+  </div>
+`;
+document.getElementById('logout-link').addEventListener('click', (e) => {
+  e.preventDefault(); AuthService.logout(); window.location.href = 'login.html';
+});
+
+const params = new URLSearchParams(window.location.search);
+const matiereId = params.get('matiere');
+const chapitreId = params.get('chapitre');
+const matiere = getMatiere(matiereId);
+const chapitre = matiere ? getChapitre(matiereId, chapitreId) : null;
+const root = document.getElementById('quiz-root');
+
+if (!matiere || !chapitre || !chapitre.exercices?.length) {
+  root.innerHTML = `
+    <div class="card" style="text-align:center; padding: var(--space-16);">
+      <h2>Aucun exercice disponible</h2>
+      <a href="cours.html" class="btn btn-primary">Retour aux cours</a>
+    </div>`;
+} else {
+  document.getElementById('crumb-matiere').textContent = matiere.nom;
+  document.getElementById('crumb-matiere').href = `matiere.html?id=${matiere.id}`;
+  document.getElementById('crumb-chapitre').textContent = chapitre.titre;
+  document.getElementById('crumb-chapitre').href = `chapitre.html?matiere=${matiere.id}&chapitre=${chapitre.id}`;
+
+  const exercices = chapitre.exercices;
+  let index = 0;
+  let score = 0;
+  let answered = false;
+  const userAnswers = [];
+
+  function optionsFor(ex) {
+    if (ex.type === 'qcm') return ex.options.map((o, i) => ({ label: o, value: i }));
+    return [{ label: 'Vrai', value: true }, { label: 'Faux', value: false }];
+  }
+
+  function renderQuestion() {
+    answered = false;
+    const ex = exercices[index];
+    const opts = optionsFor(ex);
+
+    root.innerHTML = `
+      <div class="quiz-progress">
+        ${exercices.map((_, i) => `<span class="${i < index ? 'is-done' : ''}"></span>`).join('')}
+      </div>
+      <div class="card">
+        <span class="badge badge-gold" style="margin-bottom: var(--space-4);">Question ${index + 1} / ${exercices.length} · ${ex.difficulte}</span>
+        <h3 style="margin-bottom: var(--space-6);">${ex.enonce}</h3>
+        <div id="options-wrap">
+          ${opts.map((o, i) => `
+            <label class="quiz-option" data-value="${o.value}">
+              <input type="radio" name="opt" value="${i}">
+              <span>${o.label}</span>
+            </label>
+          `).join('')}
+        </div>
+        <div class="quiz-correction" id="correction"></div>
+        <div style="display:flex; justify-content:flex-end; gap: var(--space-3); margin-top: var(--space-6);">
+          <button class="btn btn-primary" id="action-btn">Valider ma réponse</button>
+        </div>
+      </div>
+    `;
+
+    const optionEls = root.querySelectorAll('.quiz-option');
+    let selected = null;
+    optionEls.forEach((el, i) => {
+      el.addEventListener('click', () => {
+        if (answered) return;
+        optionEls.forEach(o => o.classList.remove('is-selected'));
+        el.classList.add('is-selected');
+        el.querySelector('input').checked = true;
+        selected = opts[i].value;
+      });
+    });
+
+    document.getElementById('action-btn').addEventListener('click', () => {
+      if (!answered) {
+        if (selected === null) return;
+        answered = true;
+        const isCorrect = selected === ex.bonneReponse;
+        if (isCorrect) score++;
+        userAnswers.push({ questionId: ex.id, isCorrect });
+
+        optionEls.forEach((el, i) => {
+          if (opts[i].value === ex.bonneReponse) el.classList.add('is-correct');
+          else if (opts[i].value === selected) el.classList.add('is-wrong');
+        });
+
+        const corr = document.getElementById('correction');
+        corr.classList.add('is-visible');
+        corr.innerHTML = `<strong>${isCorrect ? '✅ Bonne réponse !' : '❌ Pas tout à fait.'}</strong><br>${ex.correction}`;
+
+        const btn = document.getElementById('action-btn');
+        btn.textContent = index < exercices.length - 1 ? 'Question suivante →' : 'Voir mon résultat';
+      } else {
+        index++;
+        if (index < exercices.length) renderQuestion();
+        else renderResult();
+      }
+    });
+  }
+
+  function renderResult() {
+    const pct = Math.round((score / exercices.length) * 100);
+    ProgressService.recordChapterResult(user.id, matiere.id, chapitre.id, score, exercices.length);
+    root.innerHTML = `
+      <div class="card quiz-result">
+        <p style="text-transform:uppercase; letter-spacing:0.06em; font-size: var(--fs-xs); color: var(--text-muted);">Résultat</p>
+        <div class="score-big">${score}/${exercices.length}</div>
+        <p style="margin: var(--space-4) 0 var(--space-8);">${pct >= 60 ? 'Bien joué, continue comme ça !' : 'Pas mal, revois la leçon et retente !'}</p>
+        <div style="display:flex; gap: var(--space-4); justify-content:center; flex-wrap:wrap;">
+          <a href="exercices.html?matiere=${matiere.id}&chapitre=${chapitre.id}" class="btn btn-ghost">Recommencer</a>
+          <a href="matiere.html?id=${matiere.id}" class="btn btn-primary">Chapitre suivant</a>
+          <a href="dashboard.html" class="btn btn-gold">Voir mon tableau de bord</a>
+        </div>
+      </div>
+    `;
+  }
+
+  renderQuestion();
+}
+</script>
+
+</body>
+</html>

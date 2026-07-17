@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes cours — OnejeysirEdu237</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/tokens.css">
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/pages.css">
+<script defer src="../src/js/theme.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <div class="page-head">
+      <h2>Mes cours</h2>
+      <p>Choisis un concours, puis une matière pour commencer à réviser.</p>
+    </div>
+
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="subject-grid" id="subject-grid"></div>
+  </main>
+</div>
+
+<script type="module">
+import { AuthService } from '../src/js/services/auth-service.js';
+import { ProgressService } from '../src/js/services/progress-service.js';
+import { concoursList, getMatieresByConcours } from '../src/js/data/content.js';
+
+const user = AuthService.requireAuth('login.html');
+
+document.getElementById('sidebar').innerHTML = `
+  <a href="../index.html" class="nav__brand" style="margin-bottom: var(--space-8);">Onejeysir<span class="dot">Edu</span>237</a>
+  <a href="dashboard.html" class="sidebar__link">📊 Tableau de bord</a>
+  <a href="cours.html" class="sidebar__link is-active">📚 Mes cours</a>
+  <a href="cours.html" class="sidebar__link">✏️ Exercices</a>
+  <a href="#" class="sidebar__link">⏱️ Examens blancs</a>
+  <a href="#" class="sidebar__link">📁 Banque de sujets</a>
+  <a href="#" class="sidebar__link">🗓️ Révisions</a>
+  <a href="#" class="sidebar__link">📈 Statistiques</a>
+  <div style="margin-top:auto; padding-top: var(--space-6); border-top: 1px solid var(--border-glass);">
+    <a href="#" class="sidebar__link">⚙️ Profil</a>
+    <a href="#" id="logout-link" class="sidebar__link">🚪 Déconnexion</a>
+  </div>
+`;
+document.getElementById('logout-link').addEventListener('click', (e) => {
+  e.preventDefault(); AuthService.logout(); window.location.href = 'login.html';
+});
+
+let activeConcours = user?.concours && concoursList.some(c => c.id === user.concours) ? user.concours : concoursList[0].id;
+
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = concoursList.map(c => `
+    <button class="tab ${c.id === activeConcours ? 'is-active' : ''}" data-concours="${c.id}">${c.nom}</button>
+  `).join('');
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => { activeConcours = btn.dataset.concours; renderTabs(); renderSubjects(); });
+  });
+}
+
+function renderSubjects() {
+  const grid = document.getElementById('subject-grid');
+  const list = getMatieresByConcours(activeConcours);
+  grid.innerHTML = list.map(m => {
+    const hasContent = m.chapitres.some(c => c.statut === 'disponible');
+    const progress = hasContent ? (ProgressService.getMatiereProgress(user.id, m.id) || 0) : null;
+    return `
+      <a href="matiere.html?id=${m.id}" class="card subject-card" style="display:block;">
+        <div class="subject-card__icon">${m.icon}</div>
+        <h3 style="margin-bottom: var(--space-1);">${m.nom}</h3>
+        ${hasContent
+          ? `<p style="margin:0; font-size: var(--fs-sm);">${m.chapitres.length} chapitre${m.chapitres.length > 1 ? 's' : ''}</p>
+             <div class="subject-card__progress">
+               <div class="bar"><span style="width:${progress}%;"></span></div>
+               <span class="mono" style="font-size: var(--fs-xs); min-width:32px;">${progress}%</span>
+             </div>`
+          : `<span class="badge" style="background: var(--bg-secondary); color: var(--text-muted);">Contenu bientôt disponible</span>`
+        }
+      </a>
+    `;
+  }).join('');
+}
+
+renderTabs();
+renderSubjects();
+</script>
+
+</body>
+</html>

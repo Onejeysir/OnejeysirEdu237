@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bord — OnejeysirEdu237</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/tokens.css">
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/pages.css">
+<script defer src="../src/js/theme.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <a href="../index.html" class="nav__brand" style="margin-bottom: var(--space-8);">Onejeysir<span class="dot">Edu</span>237</a>
+    <a href="dashboard.html" class="sidebar__link is-active">📊 Tableau de bord</a>
+    <a href="cours.html" class="sidebar__link">📚 Mes cours</a>
+    <a href="cours.html" class="sidebar__link">✏️ Exercices</a>
+    <a href="#" class="sidebar__link">⏱️ Examens blancs</a>
+    <a href="#" class="sidebar__link">📁 Banque de sujets</a>
+    <a href="#" class="sidebar__link">🗓️ Révisions</a>
+    <a href="#" class="sidebar__link">📈 Statistiques</a>
+    <div style="margin-top:auto; padding-top: var(--space-6); border-top: 1px solid var(--border-glass);">
+      <a href="#" class="sidebar__link">⚙️ Profil</a>
+      <a href="#" id="logout-link" class="sidebar__link">🚪 Déconnexion</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="dash-header">
+      <div>
+        <h2 id="welcome-heading" style="margin-bottom: var(--space-1);">Bon retour !</h2>
+        <p>Voici où tu en es dans ta préparation.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap: var(--space-4);">
+        <button class="theme-toggle" data-theme-toggle aria-label="Changer de thème" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a href="#" class="btn btn-gold btn-sm">Démarrer un examen blanc</a>
+      </div>
+    </div>
+
+    <div class="dash-grid" id="kpi-grid">
+      <!-- rempli dynamiquement à partir de progress-service.js -->
+    </div>
+
+    <div class="dash-cols">
+      <div class="card">
+        <h3 style="margin-bottom: var(--space-4);">Progression par matière</h3>
+        <div id="subjects-list"></div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom: var(--space-6); text-align:center;">
+          <div class="progress-ring" id="global-ring" style="margin: 0 auto;"></div>
+          <p style="margin-top: var(--space-4); margin-bottom:0;">Progression globale</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom: var(--space-2);">Activité récente</h3>
+          <div id="activity-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<p style="position:fixed; bottom:12px; left:50%; transform:translateX(-50%); font-size:var(--fs-xs); color:var(--text-muted); background:var(--bg-surface); padding: 4px 12px; border-radius: var(--radius-full); border:1px solid var(--border-glass);">
+  Phase 1 — données de démonstration
+</p>
+
+<script type="module">
+import { AuthService } from '../src/js/services/auth-service.js';
+import { ProgressService } from '../src/js/services/progress-service.js';
+import { matieres } from '../src/js/data/content.js';
+
+const user = AuthService.requireAuth('login.html');
+if (user) {
+  document.getElementById('welcome-heading').textContent = `Bon retour, ${user.fullName.split(' ')[0]} !`;
+}
+
+document.getElementById('logout-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  AuthService.logout();
+  window.location.href = 'login.html';
+});
+
+// --- Données réelles calculées à partir des exercices effectivement faits ---
+const globalProgress = ProgressService.getGlobalProgress(user.id);
+const scoreMoyen = ProgressService.getScoreMoyen(user.id);
+const examensRealises = ProgressService.countCompletedExams(user.id);
+const heuresRevision = Math.round((examensRealises * 15 / 60) * 10) / 10; // estimation : ~15 min par série d'exercices
+
+// --- KPIs ---
+const kpiGrid = document.getElementById('kpi-grid');
+const kpis = [
+  { label: 'Progression globale', value: globalProgress + '%', delta: 'sur les matières disponibles', good: null },
+  { label: 'Score moyen', value: (examensRealises > 0 ? scoreMoyen : '—') + (examensRealises > 0 ? '/20' : ''), delta: examensRealises > 0 ? 'sur tous les chapitres faits' : 'pas encore d\u2019exercice fait', good: null },
+  { label: 'Heures de révision (est.)', value: heuresRevision + 'h', delta: 'estimation', good: null },
+  { label: 'Chapitres complétés', value: examensRealises, delta: 'depuis ton inscription', good: null },
+];
+kpiGrid.innerHTML = kpis.map(k => `
+  <div class="card">
+    <span class="kpi-label">${k.label}</span>
+    <span class="kpi-value mono">${k.value}</span>
+    <span class="kpi-delta" style="color: var(--text-muted)">${k.delta}</span>
+  </div>
+`).join('');
+
+// --- Progression par matière (matières ayant du contenu publié) ---
+const subjectsList = document.getElementById('subjects-list');
+const matieresAvecContenu = matieres.filter(m => m.chapitres.some(c => c.statut === 'disponible'));
+if (matieresAvecContenu.length === 0) {
+  subjectsList.innerHTML = `<p style="margin:0; color: var(--text-muted);">Aucune matière disponible pour le moment.</p>`;
+} else {
+  subjectsList.innerHTML = matieresAvecContenu.map(m => {
+    const p = ProgressService.getMatiereProgress(user.id, m.id) || 0;
+    return `
+    <a href="matiere.html?id=${m.id}" class="subject-row" style="text-decoration:none; color:inherit;">
+      <span style="min-width:150px; font-size: var(--fs-sm); font-weight:500;">${m.icon} ${m.nom}</span>
+      <div class="subject-row__bar"><span style="width:${p}%;"></span></div>
+      <span class="mono" style="font-size: var(--fs-sm); min-width:36px; text-align:right;">${p}%</span>
+    </a>`;
+  }).join('');
+}
+
+// --- Activité récente (réelle) ---
+const activityList = document.getElementById('activity-list');
+const history = ProgressService.getHistory(user.id).slice(0, 5);
+if (history.length === 0) {
+  activityList.innerHTML = `<p style="margin:0; color: var(--text-muted); font-size: var(--fs-sm);">Aucune activité pour l'instant. <a href="cours.html" style="color: var(--color-gold-500); font-weight:600;">Commence ton premier chapitre →</a></p>`;
+} else {
+  const dotColor = { success: 'var(--accent-success)', gold: 'var(--color-gold-500)', muted: 'var(--text-muted)' };
+  activityList.innerHTML = history.map(a => `
+    <div class="activity-item">
+      <span class="dot" style="background:${dotColor[a.type]}"></span>
+      <div>
+        <p style="margin:0; font-size: var(--fs-sm); color: var(--text-primary);">${a.texte}</p>
+        <span style="font-size: var(--fs-xs); color: var(--text-muted);">${new Date(a.date).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// --- Anneau de progression globale (élément signature) ---
+function renderRing(container, percent) {
+  const size = 140, stroke = 10, r = (size - stroke) / 2, c = 2 * Math.PI * r;
+  const offset = c - (percent / 100) * c;
+  container.innerHTML = `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle class="ring-track" cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${stroke}"/>
+      <circle class="ring-value" cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${stroke}"
+        stroke-dasharray="${c}" stroke-dashoffset="${c}"/>
+    </svg>
+    <span class="progress-ring__label"><span class="value">${percent}%</span><span class="unit">complété</span></span>
+  `;
+  requestAnimationFrame(() => {
+    container.querySelector('.ring-value').style.strokeDashoffset = offset;
+  });
+}
+renderRing(document.getElementById('global-ring'), globalProgress);
+</script>
+
+</body>
+</html>

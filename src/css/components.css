@@ -1,0 +1,167 @@
+/* ==========================================================================
+   ONEJEYSIREDU237 — COMPOSANTS
+   ========================================================================== */
+
+/* --- Navigation --- */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  background: var(--bg-surface-glass);
+  border-bottom: 1px solid var(--border-glass);
+}
+.nav__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  max-width: var(--container-max); margin: 0 auto;
+}
+.nav__brand { display: flex; align-items: center; gap: var(--space-2); font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 600; }
+.nav__brand .dot { color: var(--color-gold-500); }
+.nav__links { display: flex; align-items: center; gap: var(--space-6); }
+.nav__links a { font-size: var(--fs-sm); font-weight: 500; color: var(--text-secondary); transition: color var(--dur-fast); }
+.nav__links a:hover { color: var(--text-primary); }
+
+/* --- Boutons --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600; font-size: var(--fs-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--color-navy-900); color: #fff; }
+[data-theme="dark"] .btn-primary { background: var(--color-gold-400); color: var(--color-navy-950); }
+.btn-primary:hover { box-shadow: var(--shadow-soft); transform: translateY(-1px); }
+.btn-gold { background: var(--color-gold-500); color: var(--color-navy-950); }
+.btn-gold:hover { box-shadow: 0 8px 24px rgba(212, 167, 44, 0.35); transform: translateY(-1px); }
+.btn-ghost { background: transparent; border-color: var(--border-glass); color: var(--text-primary); }
+.btn-ghost:hover { background: var(--bg-secondary); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 0.5rem 1rem; font-size: var(--fs-xs); }
+
+/* --- Cartes glassmorphism --- */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-soft);
+}
+.card-glass {
+  background: var(--bg-surface-glass);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+}
+
+/* --- Formulaires --- */
+.field { margin-bottom: var(--space-4); }
+.field label {
+  display: block; font-size: var(--fs-sm); font-weight: 600;
+  margin-bottom: var(--space-2); color: var(--text-primary);
+}
+.field input {
+  width: 100%; padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-glass);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+.field input:focus {
+  border-color: var(--color-gold-500);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(212, 167, 44, 0.15);
+}
+.field-hint { font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--space-1); }
+.field-error { font-size: var(--fs-xs); color: var(--accent-danger); margin-top: var(--space-1); display: none; }
+.field.has-error input { border-color: var(--accent-danger); }
+.field.has-error .field-error { display: block; }
+
+/* --- Toggle thème --- */
+.theme-toggle {
+  width: 44px; height: 44px; border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass); background: var(--bg-surface);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.theme-toggle svg { width: 18px; height: 18px; }
+
+/* --- Anneau de progression (élément signature de la plateforme) --- */
+.progress-ring { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring circle {
+  fill: none; stroke-width: 8; stroke-linecap: round;
+}
+.progress-ring .ring-track { stroke: var(--border-glass); }
+.progress-ring .ring-value { stroke: var(--color-gold-500); transition: stroke-dashoffset 800ms var(--ease-out); }
+.progress-ring__label {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+  font-family: var(--font-mono);
+}
+.progress-ring__label .value { font-size: var(--fs-xl); font-weight: 700; color: var(--text-primary); }
+.progress-ring__label .unit { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* --- Badges --- */
+.badge {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  padding: 0.3rem 0.75rem; border-radius: var(--radius-full);
+  font-size: var(--fs-xs); font-weight: 600;
+}
+.badge-gold { background: rgba(212, 167, 44, 0.15); color: var(--color-gold-500); }
+.badge-success { background: rgba(47, 158, 110, 0.15); color: var(--color-emerald-500); }
+.badge-danger { background: rgba(226, 87, 76, 0.15); color: var(--color-coral-500); }
+
+/* --- Carte "sujet d'examen" (motif du hero) --- */
+.exam-card {
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-strong);
+  padding: var(--space-6);
+  font-family: var(--font-mono);
+}
+.exam-card__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); font-size: var(--fs-xs); color: var(--text-muted); }
+.exam-card__question { font-family: var(--font-body); font-size: var(--fs-lg); color: var(--text-primary); margin-bottom: var(--space-4); }
+.exam-card__option {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3); border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-glass); margin-bottom: var(--space-2);
+  font-family: var(--font-body); font-size: var(--fs-sm);
+  transition: border-color var(--dur-base), background var(--dur-base);
+}
+.exam-card__option.is-correct {
+  border-color: var(--color-emerald-500);
+  background: rgba(47, 158, 110, 0.1);
+}
+.exam-card__option .check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--border-glass);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.exam-card__option.is-correct .check { background: var(--color-emerald-500); border-color: var(--color-emerald-500); color: #fff; }
+
+/* --- Layout dashboard --- */
+.app-shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.sidebar {
+  background: var(--bg-surface); border-right: 1px solid var(--border-glass);
+  padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2);
+}
+.sidebar__link {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  font-size: var(--fs-sm); font-weight: 500; color: var(--text-secondary);
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.sidebar__link:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.sidebar__link.is-active { background: var(--color-navy-900); color: #fff; }
+[data-theme="dark"] .sidebar__link.is-active { background: var(--color-gold-400); color: var(--color-navy-950); }
+.main-content { padding: var(--space-8); background: var(--bg-primary); }
+
+@media (max-width: 860px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+}

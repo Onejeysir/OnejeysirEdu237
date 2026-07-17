@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapitre — OnejeysirEdu237</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/tokens.css">
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/pages.css">
+<script defer src="../src/js/theme.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content" style="max-width: 760px;">
+    <div class="breadcrumb">
+      <a href="cours.html">Mes cours</a> / <a id="crumb-matiere" href="#"></a> / <span id="crumb-chapitre"></span>
+    </div>
+
+    <div class="page-head">
+      <span class="badge badge-gold" id="chapitre-duree"></span>
+      <h2 id="chapitre-titre" style="margin-top: var(--space-3);"></h2>
+    </div>
+
+    <div id="lesson-content"></div>
+
+    <div class="card" style="text-align:center; padding: var(--space-8); margin-top: var(--space-8);">
+      <h3>Prêt à t'entraîner ?</h3>
+      <p>Fais les exercices de ce chapitre pour valider ta compréhension.</p>
+      <a id="exercices-link" href="#" class="btn btn-gold">Faire les exercices →</a>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { AuthService } from '../src/js/services/auth-service.js';
+import { getMatiere, getChapitre } from '../src/js/data/content.js';
+
+const user = AuthService.requireAuth('login.html');
+
+document.getElementById('sidebar').innerHTML = `
+  <a href="../index.html" class="nav__brand" style="margin-bottom: var(--space-8);">Onejeysir<span class="dot">Edu</span>237</a>
+  <a href="dashboard.html" class="sidebar__link">📊 Tableau de bord</a>
+  <a href="cours.html" class="sidebar__link is-active">📚 Mes cours</a>
+  <a href="cours.html" class="sidebar__link">✏️ Exercices</a>
+  <a href="#" class="sidebar__link">⏱️ Examens blancs</a>
+  <a href="#" class="sidebar__link">📁 Banque de sujets</a>
+  <a href="#" class="sidebar__link">🗓️ Révisions</a>
+  <a href="#" class="sidebar__link">📈 Statistiques</a>
+  <div style="margin-top:auto; padding-top: var(--space-6); border-top: 1px solid var(--border-glass);">
+    <a href="#" class="sidebar__link">⚙️ Profil</a>
+    <a href="#" id="logout-link" class="sidebar__link">🚪 Déconnexion</a>
+  </div>
+`;
+document.getElementById('logout-link').addEventListener('click', (e) => {
+  e.preventDefault(); AuthService.logout(); window.location.href = 'login.html';
+});
+
+const params = new URLSearchParams(window.location.search);
+const matiereId = params.get('matiere');
+const chapitreId = params.get('chapitre');
+const matiere = getMatiere(matiereId);
+const chapitre = matiere ? getChapitre(matiereId, chapitreId) : null;
+
+if (!matiere || !chapitre) {
+  document.querySelector('.main-content').innerHTML = `
+    <div class="card" style="text-align:center; padding: var(--space-16);">
+      <h2>Chapitre introuvable</h2>
+      <a href="cours.html" class="btn btn-primary">Retour aux cours</a>
+    </div>`;
+} else {
+  document.getElementById('crumb-matiere').textContent = matiere.nom;
+  document.getElementById('crumb-matiere').href = `matiere.html?id=${matiere.id}`;
+  document.getElementById('crumb-chapitre').textContent = chapitre.titre;
+  document.getElementById('chapitre-titre').textContent = chapitre.titre;
+  document.getElementById('chapitre-duree').textContent = `⏱ ${chapitre.duree} de lecture`;
+  document.getElementById('exercices-link').href = `exercices.html?matiere=${matiere.id}&chapitre=${chapitre.id}`;
+
+  const l = chapitre.lecon;
+  let html = '';
+
+  if (l.definitions?.length) {
+    html += `<div class="lesson-block"><h3>📌 Définitions clés</h3><ul>${l.definitions.map(d => `<li>${d}</li>`).join('')}</ul></div>`;
+  }
+  if (l.formules?.length) {
+    html += `<div class="lesson-block"><h3>🧮 Formules à retenir</h3><div>${l.formules.map(f => `<span class="formule-tag">${f}</span>`).join('')}</div></div>`;
+  }
+  if (l.exemples?.length) {
+    html += `<div class="lesson-block"><h3>💡 Exemples</h3><ul>${l.exemples.map(e => `<li>${e}</li>`).join('')}</ul></div>`;
+  }
+  if (l.piegesFrequents?.length) {
+    html += `<div class="lesson-block piege-box"><h3>⚠️ Pièges fréquents</h3><ul>${l.piegesFrequents.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+  }
+
+  document.getElementById('lesson-content').innerHTML = html;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapitres — OnejeysirEdu237</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/tokens.css">
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/pages.css">
+<script defer src="../src/js/theme.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <div class="breadcrumb"><a href="cours.html">Mes cours</a> / <span id="crumb-matiere"></span></div>
+    <div class="page-head">
+      <h2 id="matiere-titre"></h2>
+      <p id="matiere-sub"></p>
+    </div>
+
+    <div class="chapter-list" id="chapter-list"></div>
+  </main>
+</div>
+
+<script type="module">
+import { AuthService } from '../src/js/services/auth-service.js';
+import { ProgressService } from '../src/js/services/progress-service.js';
+import { getMatiere } from '../src/js/data/content.js';
+
+const user = AuthService.requireAuth('login.html');
+
+document.getElementById('sidebar').innerHTML = `
+  <a href="../index.html" class="nav__brand" style="margin-bottom: var(--space-8);">Onejeysir<span class="dot">Edu</span>237</a>
+  <a href="dashboard.html" class="sidebar__link">📊 Tableau de bord</a>
+  <a href="cours.html" class="sidebar__link is-active">📚 Mes cours</a>
+  <a href="cours.html" class="sidebar__link">✏️ Exercices</a>
+  <a href="#" class="sidebar__link">⏱️ Examens blancs</a>
+  <a href="#" class="sidebar__link">📁 Banque de sujets</a>
+  <a href="#" class="sidebar__link">🗓️ Révisions</a>
+  <a href="#" class="sidebar__link">📈 Statistiques</a>
+  <div style="margin-top:auto; padding-top: var(--space-6); border-top: 1px solid var(--border-glass);">
+    <a href="#" class="sidebar__link">⚙️ Profil</a>
+    <a href="#" id="logout-link" class="sidebar__link">🚪 Déconnexion</a>
+  </div>
+`;
+document.getElementById('logout-link').addEventListener('click', (e) => {
+  e.preventDefault(); AuthService.logout(); window.location.href = 'login.html';
+});
+
+const params = new URLSearchParams(window.location.search);
+const matiereId = params.get('id');
+const matiere = getMatiere(matiereId);
+
+if (!matiere) {
+  document.querySelector('.main-content').innerHTML = `
+    <div class="card" style="text-align:center; padding: var(--space-16);">
+      <h2>Matière introuvable</h2>
+      <p>Cette matière n'existe pas ou plus.</p>
+      <a href="cours.html" class="btn btn-primary">Retour aux cours</a>
+    </div>`;
+} else {
+  document.getElementById('crumb-matiere').textContent = matiere.nom;
+  document.getElementById('matiere-titre').textContent = `${matiere.icon} ${matiere.nom}`;
+  document.getElementById('matiere-sub').textContent = matiere.chapitres.length > 0
+    ? `${matiere.chapitres.length} chapitre${matiere.chapitres.length > 1 ? 's' : ''} au programme`
+    : `Le contenu de cette matière arrive bientôt.`;
+
+  const list = document.getElementById('chapter-list');
+  if (matiere.chapitres.length === 0) {
+    list.innerHTML = `
+      <div class="card" style="text-align:center; padding: var(--space-12);">
+        <p style="margin:0;">Aucun chapitre publié pour l'instant dans cette matière. Reviens bientôt !</p>
+      </div>`;
+  } else {
+    list.innerHTML = matiere.chapitres.map((c, i) => {
+      const done = ProgressService.isChapterCompleted(user.id, matiere.id, c.id);
+      const result = ProgressService.getChapterResult(user.id, matiere.id, c.id);
+      const clickable = c.statut === 'disponible';
+      const inner = `
+        <div class="chapter-item__left">
+          <div class="chapter-item__num ${done ? 'is-done' : ''}">${done ? '✓' : i + 1}</div>
+          <div>
+            <div style="font-weight:600;">${c.titre}</div>
+            <div class="chapter-item__meta">${clickable ? c.duree : 'À venir'}${result ? ` · Dernier score : ${result.score}/${result.total}` : ''}</div>
+          </div>
+        </div>
+        <span class="badge ${clickable ? 'badge-gold' : ''}" style="${clickable ? '' : 'background:var(--bg-secondary); color:var(--text-muted);'}">
+          ${clickable ? (done ? 'Revoir' : 'Commencer') : 'Bientôt'}
+        </span>
+      `;
+      return clickable
+        ? `<a href="chapitre.html?matiere=${matiere.id}&chapitre=${c.id}" class="chapter-item is-clickable">${inner}</a>`
+        : `<div class="chapter-item is-disabled">${inner}</div>`;
+    }).join('');
+  }
+}
+</script>
+
+</body>
+</html>

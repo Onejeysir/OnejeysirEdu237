@@ -1,0 +1,98 @@
+/* ==========================================================================
+   ONEJEYSIREDU237 — DESIGN TOKENS
+   Identité : excellence académique camerounaise.
+   Navy profond (nuit de révision) + Or (réussite, diplôme) + Émeraude (progrès).
+   ========================================================================== */
+
+:root {
+  /* --- Couleurs de marque --- */
+  --color-navy-950: #070B14;
+  --color-navy-900: #0B1120;
+  --color-navy-800: #121A2E;
+  --color-navy-700: #1B2740;
+  --color-navy-600: #283A5C;
+
+  --color-gold-500: #D4A72C;
+  --color-gold-400: #E4BC4F;
+  --color-gold-300: #F0D27E;
+
+  --color-emerald-500: #2F9E6E;
+  --color-emerald-400: #45B983;
+
+  --color-coral-500: #E2574C;
+  --color-coral-400: #EB776D;
+
+  --color-paper-100: #F7F5F0;
+  --color-paper-200: #EFEBE2;
+  --color-ink-900: #171B24;
+  --color-ink-700: #3C4353;
+  --color-ink-500: #6B7385;
+
+  /* --- Thème clair (par défaut) --- */
+  --bg-primary: var(--color-paper-100);
+  --bg-secondary: var(--color-paper-200);
+  --bg-surface: #FFFFFF;
+  --bg-surface-glass: rgba(255, 255, 255, 0.6);
+  --border-glass: rgba(23, 27, 36, 0.08);
+  --text-primary: var(--color-ink-900);
+  --text-secondary: var(--color-ink-700);
+  --text-muted: var(--color-ink-500);
+  --accent-primary: var(--color-navy-900);
+  --accent-gold: var(--color-gold-500);
+  --accent-success: var(--color-emerald-500);
+  --accent-danger: var(--color-coral-500);
+  --shadow-soft: 0 8px 30px rgba(23, 27, 36, 0.08);
+  --shadow-strong: 0 20px 60px rgba(23, 27, 36, 0.16);
+
+  /* --- Typographie --- */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+  --fs-3xl: 2.25rem;
+  --fs-4xl: 3rem;
+  --fs-5xl: 4rem;
+
+  /* --- Espacement --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* --- Rayons & transitions --- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+
+  --container-max: 1180px;
+}
+
+/* --- Thème sombre --- */
+[data-theme="dark"] {
+  --bg-primary: var(--color-navy-950);
+  --bg-secondary: var(--color-navy-900);
+  --bg-surface: var(--color-navy-800);
+  --bg-surface-glass: rgba(18, 26, 46, 0.55);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-primary: #F2F1EC;
+  --text-secondary: #C7CCDA;
+  --text-muted: #838CA3;
+  --accent-primary: var(--color-gold-400);
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.5);
+}

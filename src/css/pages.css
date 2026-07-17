@@ -1,0 +1,188 @@
+/* ==========================================================================
+   ONEJEYSIREDU237 — PAGES
+   ========================================================================== */
+
+/* --- Hero (landing) --- */
+.hero {
+  padding: var(--space-24) 0 var(--space-16);
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--space-16); align-items: center;
+}
+.hero__eyebrow {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-gold-500); margin-bottom: var(--space-4);
+}
+.hero h1 { margin-bottom: var(--space-6); }
+.hero h1 em { font-style: normal; color: var(--color-gold-500); }
+.hero__lead { font-size: var(--fs-lg); max-width: 46ch; margin-bottom: var(--space-8); }
+.hero__actions { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+.hero__stats { display: flex; gap: var(--space-8); margin-top: var(--space-12); }
+.hero__stat .num { font-family: var(--font-mono); font-size: var(--fs-2xl); font-weight: 700; color: var(--text-primary); }
+.hero__stat .lbl { font-size: var(--fs-xs); color: var(--text-muted); }
+
+.exam-card--floating { transform: rotate(-2deg); }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-top: var(--space-16); text-align: left; }
+  .hero h1 { font-size: var(--fs-4xl); }
+}
+
+/* --- Sections communes --- */
+.section { padding: var(--space-16) 0; }
+.section__head { max-width: 640px; margin-bottom: var(--space-12); }
+.section__head .badge-gold { margin-bottom: var(--space-4); }
+
+/* --- Grille des concours --- */
+.concours-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+.concours-card { padding: var(--space-8); position: relative; overflow: hidden; }
+.concours-card__matieres { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+@media (max-width: 760px) { .concours-grid { grid-template-columns: 1fr; } }
+
+/* --- Grille fonctionnalités --- */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+.feature-card .icon-wrap {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: rgba(212, 167, 44, 0.12); color: var(--color-gold-500);
+  display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);
+}
+@media (max-width: 860px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .features-grid { grid-template-columns: 1fr; } }
+
+/* --- Auth (login / register / forgot) --- */
+.auth-shell { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+.auth-shell__form { display: flex; align-items: center; justify-content: center; padding: var(--space-8); }
+.auth-shell__form-inner { width: 100%; max-width: 400px; }
+.auth-shell__visual {
+  background: var(--color-navy-900);
+  display: flex; align-items: center; justify-content: center; padding: var(--space-16);
+  position: relative; overflow: hidden;
+}
+.auth-shell__visual::before {
+  content: ""; position: absolute; inset: -20%;
+  background: radial-gradient(circle at 30% 30%, rgba(212,167,44,0.18), transparent 55%);
+}
+.auth-shell__visual-content { position: relative; color: #fff; max-width: 380px; }
+.auth-shell__visual h2 { color: #fff; }
+.auth-shell__visual p { color: rgba(255,255,255,0.7); }
+.auth-back { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: var(--space-8); }
+.auth-divider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-6) 0; color: var(--text-muted); font-size: var(--fs-xs); }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--border-glass); }
+.auth-foot { text-align: center; font-size: var(--fs-sm); color: var(--text-muted); margin-top: var(--space-6); }
+
+@media (max-width: 900px) {
+  .auth-shell { grid-template-columns: 1fr; }
+  .auth-shell__visual { display: none; }
+}
+
+/* --- Dashboard --- */
+.dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-8); flex-wrap: wrap; gap: var(--space-4); }
+.dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); margin-bottom: var(--space-8); }
+.dash-grid .card { display: flex; flex-direction: column; gap: var(--space-2); }
+.dash-grid .card .kpi-label { font-size: var(--fs-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.dash-grid .card .kpi-value { font-family: var(--font-mono); font-size: var(--fs-3xl); font-weight: 700; }
+.dash-grid .card .kpi-delta { font-size: var(--fs-xs); }
+.dash-cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-6); }
+.subject-row { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) 0; border-bottom: 1px solid var(--border-glass); }
+.subject-row:last-child { border-bottom: none; }
+.subject-row__bar { flex: 1; height: 8px; border-radius: var(--radius-full); background: var(--bg-secondary); margin: 0 var(--space-4); overflow: hidden; }
+.subject-row__bar span { display: block; height: 100%; background: var(--color-gold-500); border-radius: var(--radius-full); }
+.activity-item { display: flex; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--border-glass); align-items: flex-start; }
+.activity-item:last-child { border-bottom: none; }
+.activity-item .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+@media (max-width: 1000px) {
+  .dash-grid { grid-template-columns: 1fr 1fr; }
+  .dash-cols { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   PHASE 2 — Cours, chapitres, exercices
+   ========================================================================== */
+
+.page-head { margin-bottom: var(--space-8); }
+.breadcrumb { font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: var(--space-4); }
+.breadcrumb a { color: var(--text-muted); }
+.breadcrumb a:hover { color: var(--text-primary); }
+
+/* --- Onglets concours --- */
+.tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-8); border-bottom: 1px solid var(--border-glass); }
+.tab {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text-muted);
+  border-bottom: 2px solid transparent; cursor: pointer; background: none; border-top:none; border-left:none; border-right:none;
+}
+.tab.is-active { color: var(--text-primary); border-bottom-color: var(--color-gold-500); }
+
+/* --- Grille des matières --- */
+.subject-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+.subject-card { padding: var(--space-6); transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast); }
+.subject-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+.subject-card__icon { font-size: 1.75rem; margin-bottom: var(--space-3); }
+.subject-card__progress { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.subject-card__progress .bar { flex: 1; height: 6px; border-radius: var(--radius-full); background: var(--bg-secondary); overflow: hidden; }
+.subject-card__progress .bar span { display: block; height: 100%; background: var(--color-gold-500); border-radius: var(--radius-full); }
+@media (max-width: 900px) { .subject-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .subject-grid { grid-template-columns: 1fr; } }
+
+/* --- Liste des chapitres --- */
+.chapter-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.chapter-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-4) var(--space-5); border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass); background: var(--bg-surface);
+  transition: border-color var(--dur-fast), transform var(--dur-fast);
+}
+.chapter-item.is-clickable:hover { border-color: var(--color-gold-500); transform: translateX(2px); }
+.chapter-item.is-disabled { opacity: 0.55; }
+.chapter-item__left { display: flex; align-items: center; gap: var(--space-4); }
+.chapter-item__num {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-secondary); font-family: var(--font-mono); font-size: var(--fs-sm); font-weight: 600; flex-shrink: 0;
+}
+.chapter-item__num.is-done { background: var(--color-emerald-500); color: #fff; }
+.chapter-item__meta { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* --- Contenu de leçon --- */
+.lesson-block { margin-bottom: var(--space-8); }
+.lesson-block h3 { display: flex; align-items: center; gap: var(--space-2); font-size: var(--fs-lg); }
+.lesson-block ul { padding-left: 1.2rem; color: var(--text-secondary); }
+.lesson-block li { margin-bottom: var(--space-2); }
+.formule-tag {
+  display: inline-block; font-family: var(--font-mono); font-size: var(--fs-sm);
+  background: var(--bg-secondary); padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm); margin: 0 var(--space-2) var(--space-2) 0;
+}
+.piege-box {
+  background: rgba(226, 87, 76, 0.08); border: 1px solid rgba(226, 87, 76, 0.25);
+  border-radius: var(--radius-md); padding: var(--space-4);
+}
+.piege-box h3 { color: var(--accent-danger); }
+
+/* --- Moteur d'exercices --- */
+.quiz-progress { display: flex; gap: var(--space-1); margin-bottom: var(--space-6); }
+.quiz-progress span { flex: 1; height: 4px; border-radius: var(--radius-full); background: var(--bg-secondary); }
+.quiz-progress span.is-done { background: var(--color-gold-500); }
+.quiz-option {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4); border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-glass); margin-bottom: var(--space-3);
+  cursor: pointer; transition: border-color var(--dur-fast), background var(--dur-fast);
+  background: var(--bg-surface);
+}
+.quiz-option:hover { border-color: var(--color-gold-500); }
+.quiz-option.is-selected { border-color: var(--color-gold-500); background: rgba(212,167,44,0.08); }
+.quiz-option.is-correct { border-color: var(--color-emerald-500); background: rgba(47,158,110,0.1); }
+.quiz-option.is-wrong { border-color: var(--accent-danger); background: rgba(226,87,76,0.08); }
+.quiz-option input { accent-color: var(--color-gold-500); }
+.quiz-correction {
+  margin-top: var(--space-4); padding: var(--space-4);
+  border-radius: var(--radius-md); background: var(--bg-secondary);
+  font-size: var(--fs-sm); display: none;
+}
+.quiz-correction.is-visible { display: block; }
+.quiz-result { text-align: center; padding: var(--space-12) var(--space-6); }
+.quiz-result .score-big { font-family: var(--font-mono); font-size: var(--fs-5xl); font-weight: 700; color: var(--color-gold-500); }

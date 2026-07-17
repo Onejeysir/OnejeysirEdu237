@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créer un compte — OnejeysirEdu237</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../src/css/tokens.css">
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/pages.css">
+<script defer src="../src/js/theme.js"></script>
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-shell__form">
+    <div class="auth-shell__form-inner">
+      <a href="../index.html" class="auth-back">← Retour à l'accueil</a>
+      <h2>Crée ton compte candidat</h2>
+      <p style="margin-bottom: var(--space-8);">Gratuit, en moins d'une minute.</p>
+
+      <form id="register-form" novalidate>
+        <div class="field">
+          <label for="fullName">Nom complet</label>
+          <input type="text" id="fullName" name="fullName" autocomplete="name" required minlength="2">
+          <p class="field-error">Merci d'indiquer ton nom complet.</p>
+        </div>
+        <div class="field">
+          <label for="email">Adresse email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+          <p class="field-error">Merci d'indiquer une adresse email valide.</p>
+        </div>
+        <div class="field">
+          <label for="concours">Concours préparé</label>
+          <select id="concours" name="concours" required style="width:100%; padding:0.85rem 1rem; border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); background: var(--bg-surface); color: var(--text-primary);">
+            <option value="">Choisir un concours</option>
+            <option value="iut">IUT de Douala</option>
+            <option value="polytechnique">Polytechnique Douala</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+          <p class="field-hint">8 caractères minimum, avec au moins un chiffre.</p>
+          <p class="field-error">Le mot de passe doit contenir au moins 8 caractères et un chiffre.</p>
+        </div>
+        <div class="field">
+          <label for="passwordConfirm">Confirmer le mot de passe</label>
+          <input type="password" id="passwordConfirm" name="passwordConfirm" autocomplete="new-password" required>
+          <p class="field-error">Les mots de passe ne correspondent pas.</p>
+        </div>
+
+        <p id="form-message" role="alert" style="display:none; font-size: var(--fs-sm); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-4);"></p>
+
+        <button type="submit" class="btn btn-primary btn-block">Créer mon compte</button>
+      </form>
+
+      <p class="auth-foot">Déjà inscrit ? <a href="login.html" style="color: var(--color-gold-500); font-weight:600;">Se connecter</a></p>
+    </div>
+  </div>
+
+  <div class="auth-shell__visual">
+    <div class="auth-shell__visual-content">
+      <h2>Rejoins les futurs admis</h2>
+      <p>Un espace personnel pour suivre ta progression, matière par matière, jusqu'au jour du concours.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { AuthService } from '../src/js/services/auth-service.js';
+
+const form = document.getElementById('register-form');
+const message = document.getElementById('form-message');
+
+function showFieldError(id, hasError) {
+  document.getElementById(id).closest('.field').classList.toggle('has-error', hasError);
+}
+
+function showMessage(text, type) {
+  message.textContent = text;
+  message.style.display = 'block';
+  message.style.background = type === 'error' ? 'rgba(226,87,76,0.12)' : 'rgba(47,158,110,0.12)';
+  message.style.color = type === 'error' ? 'var(--accent-danger)' : 'var(--accent-success)';
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fullName = form.fullName.value.trim();
+  const email = form.email.value.trim();
+  const concours = form.concours.value;
+  const password = form.password.value;
+  const passwordConfirm = form.passwordConfirm.value;
+
+  let valid = true;
+  showFieldError('fullName', fullName.length < 2); if (fullName.length < 2) valid = false;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  showFieldError('email', !emailOk); if (!emailOk) valid = false;
+  const passwordOk = password.length >= 8 && /\d/.test(password);
+  showFieldError('password', !passwordOk); if (!passwordOk) valid = false;
+  showFieldError('passwordConfirm', password !== passwordConfirm); if (password !== passwordConfirm) valid = false;
+
+  if (!concours) { valid = false; }
+  if (!valid) { showMessage('Merci de corriger les champs indiqués.', 'error'); return; }
+
+  try {
+    await AuthService.register({ fullName, email, password, concours });
+    showMessage('Compte créé avec succès. Redirection…', 'success');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+  } catch (err) {
+    showMessage(err.message, 'error');
+  }
+});
+</script>
+
+</body>
+</html>

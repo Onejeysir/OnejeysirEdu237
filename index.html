@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OnejeysirEdu237 — Réussis ton concours IUT & Polytechnique Douala</title>
+<meta name="description" content="La plateforme de préparation aux concours de l'IUT de Douala et de l'École Nationale Supérieure Polytechnique de Douala : cours, exercices, examens blancs et suivi de progression.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/css/tokens.css">
+<link rel="stylesheet" href="src/css/base.css">
+<link rel="stylesheet" href="src/css/components.css">
+<link rel="stylesheet" href="src/css/pages.css">
+<script defer src="src/js/theme.js"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">Onejeysir<span class="dot">Edu</span>237</a>
+    <div class="nav__links">
+      <a href="#concours">Concours</a>
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#tarifs">Tarifs</a>
+      <button class="theme-toggle" data-theme-toggle aria-label="Changer de thème" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a href="pages/login.html" class="btn btn-ghost btn-sm">Connexion</a>
+      <a href="pages/register.html" class="btn btn-primary btn-sm">Commencer</a>
+    </div>
+  </div>
+</nav>
+
+<header class="container hero">
+  <div>
+    <span class="hero__eyebrow">● Préparation concours Cameroun 2026</span>
+    <h1>Prépare ton concours <em>comme un futur admis</em>, pas comme un candidat parmi d'autres.</h1>
+    <p class="hero__lead">Cours structurés, exercices corrigés, examens blancs chronométrés et suivi de progression pour les concours de l'IUT de Douala et de Polytechnique Douala — tout au même endroit.</p>
+    <div class="hero__actions">
+      <a href="pages/register.html" class="btn btn-gold">Créer mon compte gratuit</a>
+      <a href="#concours" class="btn btn-ghost">Voir les concours</a>
+    </div>
+    <div class="hero__stats">
+      <div class="hero__stat"><div class="num mono">2</div><div class="lbl">Concours couverts</div></div>
+      <div class="hero__stat"><div class="num mono">500+</div><div class="lbl">Exercices corrigés</div></div>
+      <div class="hero__stat"><div class="num mono">24/7</div><div class="lbl">Accès illimité</div></div>
+    </div>
+  </div>
+
+  <div class="exam-card exam-card--floating" aria-hidden="true">
+    <div class="exam-card__header">
+      <span>MATHÉMATIQUES · IUT DOUALA</span>
+      <span>Q. 4/20</span>
+    </div>
+    <div class="exam-card__question">Quelle est la dérivée de f(x) = 3x² + 5x − 2 ?</div>
+    <div class="exam-card__option"><span class="check"></span> f'(x) = 6x + 2</div>
+    <div class="exam-card__option is-correct"><span class="check">✓</span> f'(x) = 6x + 5</div>
+    <div class="exam-card__option"><span class="check"></span> f'(x) = 3x + 5</div>
+  </div>
+</header>
+
+<section class="section container" id="concours">
+  <div class="section__head">
+    <span class="badge badge-gold">Les 2 concours</span>
+    <h2>Une préparation dédiée à chaque concours</h2>
+    <p>Contenus organisés par matière, avec des filières spécifiques ajoutables au fil du temps.</p>
+  </div>
+  <div class="concours-grid">
+    <article class="card concours-card">
+      <span class="badge badge-gold">IUT de Douala</span>
+      <h3>Institut Universitaire de Technologie</h3>
+      <p>Mathématiques, Français, Anglais, Culture Générale, Logique — avec extensions par filière (OGA, Génie Informatique, GLT…).</p>
+      <div class="concours-card__matieres">
+        <span class="badge badge-success">Mathématiques</span>
+        <span class="badge badge-success">Français</span>
+        <span class="badge badge-success">Anglais</span>
+        <span class="badge badge-success">Logique</span>
+      </div>
+    </article>
+    <article class="card concours-card">
+      <span class="badge badge-gold">Polytechnique Douala</span>
+      <h3>École Nationale Supérieure Polytechnique</h3>
+      <p>Mathématiques, Physique, Chimie et Culture Générale, avec exercices calibrés sur le niveau réel du concours.</p>
+      <div class="concours-card__matieres">
+        <span class="badge badge-success">Mathématiques</span>
+        <span class="badge badge-success">Physique</span>
+        <span class="badge badge-success">Chimie</span>
+        <span class="badge badge-success">Culture Générale</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section container" id="fonctionnalites">
+  <div class="section__head">
+    <span class="badge badge-gold">Fonctionnalités</span>
+    <h2>Tout ce qu'il faut, rien de superflu</h2>
+  </div>
+  <div class="features-grid">
+    <div class="card feature-card">
+      <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <h3>Cours structurés</h3>
+      <p>Chapitres, définitions, formules, exemples et fiches de révision pour chaque matière.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <h3>Exercices corrigés</h3>
+      <p>QCM, vrai/faux et calculs avec correction détaillée étape par étape.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+      <h3>Examens blancs chronométrés</h3>
+      <p>Conditions réelles de concours, correction automatique et analyse détaillée.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+      <h3>Suivi de progression</h3>
+      <p>Statistiques par matière, matières faibles détectées, historique complet.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20l9-5-9-5-9 5 9 5z"/><path d="M12 10L3 5l9-5 9 5-9 5z"/></svg></div>
+      <h3>Parcours personnalisé</h3>
+      <p>Un programme de révision généré selon tes lacunes détectées après un test de niveau.</p>
+    </div>
+    <div class="card feature-card">
+      <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h3>Compte sécurisé</h3>
+      <p>Authentification chiffrée, données personnelles protégées, sessions sécurisées.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="card-glass" style="padding: var(--space-16); text-align:center;">
+    <h2>Prêt à commencer ta préparation ?</h2>
+    <p style="max-width:50ch; margin: 0 auto var(--space-8);">Rejoins les candidats qui préparent leur concours avec méthode plutôt qu'au hasard.</p>
+    <a href="pages/register.html" class="btn btn-gold">Créer mon compte gratuit</a>
+  </div>
+</section>
+
+<footer class="container" style="padding: var(--space-12) var(--space-6); border-top: 1px solid var(--border-glass); display:flex; justify-content:space-between; flex-wrap:wrap; gap:var(--space-4); font-size: var(--fs-sm); color: var(--text-muted);">
+  <span>© 2026 OnejeysirEdu237 — Douala, Cameroun</span>
+  <span>Fait pour les futurs admis de l'IUT et de Polytechnique Douala.</span>
+</footer>
+
+</body>
+</html>
